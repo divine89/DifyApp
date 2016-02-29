@@ -1,7 +1,5 @@
 package com.example.maciek.difyproject;
 
-import android.util.Log;
-
 public class UrlBuilder
 {
     private String HTTP = "http://";
@@ -27,7 +25,12 @@ public class UrlBuilder
     private int RESULT_50 = 50;
     private int RESULT_100 = 100;
 
+    //private LogBuilder logBuilder;
 
+//    UrlBuilder()
+  //  {
+    //    logBuilder = new LogBuilder();
+   // }
 
     public int getResult1()
     {
@@ -150,10 +153,8 @@ public class UrlBuilder
         url = url + getResult100();
 
         LogBuilder logBuilder = new LogBuilder();
-        UrlBuilder urlBuilder = new UrlBuilder();
-        logBuilder.createDebugLog(191, urlBuilder, "createArtistSearchUrl", "URL: " + url);
-        logBuilder = null;
-        urlBuilder = null;
+        logBuilder.createDebugLog(191, this, "createArtistSearchUrl", "URL: " + url);
+
 
         setUrl(url);
     }
@@ -169,10 +170,7 @@ public class UrlBuilder
             url = url + genre;
 
             LogBuilder logBuilder = new LogBuilder();
-            UrlBuilder urlBuilder = new UrlBuilder();
-            logBuilder.createDebugLog(191, urlBuilder, "addGenreToUrl", "URL: " + url);
-            logBuilder = null;
-            urlBuilder = null;
+            logBuilder.createDebugLog(191, this, "addGenreToUrl", "URL: " + url);
 
             setUrl(url);
         }
@@ -190,10 +188,7 @@ public class UrlBuilder
             url = url + country;
 
             LogBuilder logBuilder = new LogBuilder();
-            UrlBuilder urlBuilder = new UrlBuilder();
-            logBuilder.createDebugLog(191, urlBuilder, "addCountryToUrl", "URL: " + url);
-            logBuilder = null;
-            urlBuilder = null;
+            logBuilder.createDebugLog(191, this, "addCountryToUrl", "URL: " + url);
 
             setUrl(url);
         }
@@ -211,15 +206,9 @@ public class UrlBuilder
             url = url + city;
 
             LogBuilder logBuilder = new LogBuilder();
-            UrlBuilder urlBuilder = new UrlBuilder();
-            logBuilder.createDebugLog(191, urlBuilder, "addCityToUrl", "URL: " + url);
-            logBuilder = null;
-            urlBuilder = null;
+            logBuilder.createDebugLog(191, this, "addCityToUrl", "URL: " + url);
 
             setUrl(url);
         }
     }
-
-
-
 }

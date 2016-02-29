@@ -28,9 +28,10 @@ import java.util.List;
 
 public class SearchedArtists extends AppCompatActivity
 {
-    String genre;
-    String country;
-    String city;
+    private String genreFromIntent;
+    private String countryFromIntent;
+    private String cityFromIntent;
+
     List<String> lstring = new ArrayList<>();
     SearchedArtists activity;
     ListView modeList;
@@ -40,6 +41,36 @@ public class SearchedArtists extends AppCompatActivity
     ListView listView;
     SearchedArtists searchedArtists;
     UrlBuilder urlBuilder;
+
+    public String getGenreFromIntent()
+    {
+        return genreFromIntent;
+    }
+
+    public void setGenreFromIntent(String genreFromIntent)
+    {
+        this.genreFromIntent = genreFromIntent;
+    }
+
+    public String getCountryFromIntent()
+    {
+        return getCountryFromIntent();
+    }
+
+    public void setCountryFromIntent(String countryFromIntent)
+    {
+        this.countryFromIntent = countryFromIntent;
+    }
+
+    public String getCityFromIntent()
+    {
+        return getCityFromIntent();
+    }
+
+    public void setCityFromIntent(String cityFromIntent)
+    {
+        this.cityFromIntent = cityFromIntent;
+    }
 
 
     @Override
@@ -53,41 +84,42 @@ public class SearchedArtists extends AppCompatActivity
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        genre = extras.getString("GENRE");
+        setGenreFromIntent(extras.getString("GENRE"));
+
         try
         {
+            String genre = getGenreFromIntent();
             genre = URLEncoder.encode(genre, "UTF-8");
-        } catch (UnsupportedEncodingException e)
+            setGenreFromIntent(genre);
+        }
+        catch (UnsupportedEncodingException e)
         {
             e.printStackTrace();
         }
-        city = extras.getString("CITY");
-        country = extras.getString("COUNTRY");
 
+        setCountryFromIntent(extras.getString("COUNTRY"));
 
+        setCityFromIntent(extras.getString("CITY"));
 
         urlBuilder.createSearchAnArtistUrl();
 
-        if(genre != null)
+        if(getGenreFromIntent() != null)
         {
-            Log.d("DEBUG", "In genre null. Genre:" + genre);
-            urlBuilder.addGenreToUrl(genre);
-            genre = null;
+            urlBuilder.addGenreToUrl(getGenreFromIntent());
+            setGenreFromIntent(null);
         }
 
-        if(country != null)
+        if(getCountryFromIntent() != null)
         {
-            urlBuilder.addCountryToUrl(country);
-            country = null;
+            urlBuilder.addCountryToUrl(getCountryFromIntent());
+            setCountryFromIntent(null);
         }
 
-        if(city != null)
+        if(getCityFromIntent() != null)
         {
-            urlBuilder.addCityToUrl(city);
-            city = null;
+            urlBuilder.addCityToUrl(getCityFromIntent());
+            setCityFromIntent(null);
         }
-
-        //Log.d("DEBUG", "URL:"+URL);
 
         listView = (ListView) searchedArtists.findViewById(R.id.listView2);
 
