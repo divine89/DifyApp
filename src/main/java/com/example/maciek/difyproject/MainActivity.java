@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        activity = MainActivity.this;
+        activity = MainActivity.this; //TODO improve declaration
 
         //lstring.add(str);
 
@@ -259,8 +259,6 @@ public class MainActivity extends AppCompatActivity
 
     void getGenres()
     {
-        Log.d("DEBUG", "In getGenres");
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
         String url = "http://developer.echonest.com/api/v4/genre/list?api_key=SXZNUZ73HVWJ7T5V1&format=json";
 
         RequestQueue rQ = Volley.newRequestQueue(this);

@@ -64,7 +64,7 @@ public class SearchedArtists extends AppCompatActivity
 
     public String getCityFromIntent()
     {
-        return getCityFromIntent();
+        return cityFromIntent;
     }
 
     public void setCityFromIntent(String cityFromIntent)
