@@ -32,15 +32,34 @@ public class SearchedArtists extends AppCompatActivity
     private String countryFromIntent;
     private String cityFromIntent;
 
-    List<String> lstring = new ArrayList<>();
-    SearchedArtists activity;
-    ListView modeList;
-    ArrayAdapter<String> modeAdapter;
     List<String> tablica;
     ArrayAdapter<String> adapter;
     ListView listView;
     SearchedArtists searchedArtists;
-    UrlBuilder urlBuilder;
+
+    private Intent intent;
+    private Bundle extrasFromIntent;
+    private UrlBuilder urlBuilder;
+
+    public void setIntent(Intent intent)
+    {
+        this.intent = intent;
+    }
+
+    public Intent getIntentFiled()
+    {
+        return intent;
+    }
+
+    public void setExtrasFromIntent(Bundle bundle)
+    {
+        this.extrasFromIntent = bundle;
+    }
+
+    public Bundle getExtrasFromIntent()
+    {
+        return extrasFromIntent;
+    }
 
     public String getGenreFromIntent()
     {
@@ -54,7 +73,7 @@ public class SearchedArtists extends AppCompatActivity
 
     public String getCountryFromIntent()
     {
-        return getCountryFromIntent();
+        return countryFromIntent;
     }
 
     public void setCountryFromIntent(String countryFromIntent)
@@ -72,6 +91,21 @@ public class SearchedArtists extends AppCompatActivity
         this.cityFromIntent = cityFromIntent;
     }
 
+    public void setUrlBuilder(UrlBuilder urlBuilder)
+    {
+        this.urlBuilder = urlBuilder;
+    }
+
+    public UrlBuilder getUrlBuilder()
+    {
+        return urlBuilder;
+    }
+
+    public SearchedArtists()
+    {
+        super();
+        urlBuilder = new UrlBuilder();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -80,10 +114,19 @@ public class SearchedArtists extends AppCompatActivity
         setContentView(R.layout.activity_searched_artists);
 
         searchedArtists = SearchedArtists.this;
-        urlBuilder = new UrlBuilder();
 
         Intent intent = getIntent();
+
+        setIntent(intent);
+
+        intent = getIntentFiled();
+
         Bundle extras = intent.getExtras();
+
+        setExtrasFromIntent(extras);
+
+        extras = getExtrasFromIntent();
+
         setGenreFromIntent(extras.getString("GENRE"));
 
         try
@@ -101,23 +144,23 @@ public class SearchedArtists extends AppCompatActivity
 
         setCityFromIntent(extras.getString("CITY"));
 
-        urlBuilder.createSearchAnArtistUrl();
+        getUrlBuilder().createSearchAnArtistUrl();
 
         if(getGenreFromIntent() != null)
         {
-            urlBuilder.addGenreToUrl(getGenreFromIntent());
+            getUrlBuilder().addGenreToUrl(getGenreFromIntent());
             setGenreFromIntent(null);
         }
 
         if(getCountryFromIntent() != null)
         {
-            urlBuilder.addCountryToUrl(getCountryFromIntent());
+            getUrlBuilder().addCountryToUrl(getCountryFromIntent());
             setCountryFromIntent(null);
         }
 
         if(getCityFromIntent() != null)
         {
-            urlBuilder.addCityToUrl(getCityFromIntent());
+            getUrlBuilder().addCityToUrl(getCityFromIntent());
             setCityFromIntent(null);
         }
 

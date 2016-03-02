@@ -25,13 +25,6 @@ public class UrlBuilder
     private int RESULT_50 = 50;
     private int RESULT_100 = 100;
 
-    //private LogBuilder logBuilder;
-
-//    UrlBuilder()
-  //  {
-    //    logBuilder = new LogBuilder();
-   // }
-
     public int getResult1()
     {
         return RESULT_1;
@@ -152,9 +145,7 @@ public class UrlBuilder
         url = url + getResultString();
         url = url + getResult100();
 
-        //LogBuilder logBuilder = new LogBuilder();
-        //logBuilder.createDebugLog(191, this, "createArtistSearchUrl", "URL: " + url);
-
+        LogBuilder.createDebugLog(191, this, "createArtistSearchUrl", "URL: " + url);
 
         setUrl(url);
     }
@@ -169,8 +160,7 @@ public class UrlBuilder
             url = url + getGenreString();
             url = url + genre;
 
-            //LogBuilder logBuilder = new LogBuilder();
-            //logBuilder.createDebugLog(191, this, "addGenreToUrl", "URL: " + url);
+            LogBuilder.createDebugLog(191, this, "addGenreToUrl", "URL: " + url);
 
             setUrl(url);
         }
@@ -187,8 +177,7 @@ public class UrlBuilder
             url = url + getCountryString();
             url = url + country;
 
-            //LogBuilder logBuilder = new LogBuilder();
-            //logBuilder.createDebugLog(191, this, "addCountryToUrl", "URL: " + url);
+            LogBuilder.createDebugLog(191, this, "addCountryToUrl", "URL: " + url);
 
             setUrl(url);
         }
@@ -205,8 +194,7 @@ public class UrlBuilder
             url = url + getCityString();
             url = url + city;
 
-            //LogBuilder logBuilder = new LogBuilder();
-            //logBuilder.createDebugLog(191, this, "addCityToUrl", "URL: " + url);
+            LogBuilder.createDebugLog(191, this, "addCityToUrl", "URL: " + url);
 
             setUrl(url);
         }

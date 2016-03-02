@@ -4,7 +4,7 @@ import android.util.Log;
 
 public class LogBuilder
 {
-    public void createDebugLog(int lineNumber, Object object, String methodName, String description)
+    public static void createDebugLog(int lineNumber, Object object, String methodName, String description)
     {
         ClassName classNameObject = new ClassName();
 
