@@ -26,39 +26,82 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO pozmieniać gdzie trzeba zmienne na final
+
 public class SearchedArtists extends AppCompatActivity
 {
-    private String genreFromIntent;
-    private String countryFromIntent;
-    private String cityFromIntent;
 
+    //TODO odzielić składniki klasy od siebie komentarzami i ustawić na private
     List<String> tablica;
     ArrayAdapter<String> adapter;
     ListView listView;
     SearchedArtists searchedArtists;
-
+    private String genreFromIntent;
+    private String countryFromIntent;
+    private String cityFromIntent;
     private Intent intent;
-    private Bundle extrasFromIntent;
+    private Bundle extrasBundle;
     private UrlBuilder urlBuilder;
+    private String GENRE_KEY = "GENRE";
+    private String COUNTRY_KEY = "COUNTRY";
+    private String CITY_KEY = "CITY";
 
-    public void setIntent(Intent intent)
+    //TODO odzielic rodzaje metod od siebie komentarzami. Wydzielic miejsce na konstruktor.
+
+    public String getGenreKey()
     {
-        this.intent = intent;
+        return GENRE_KEY;
     }
 
-    public Intent getIntentFiled()
+    public void setGenreKey(String GENRE_KEY)
+    {
+        this.GENRE_KEY = GENRE_KEY;
+    }
+
+    public String getCountryKey()
+    {
+        return COUNTRY_KEY;
+    }
+
+    public void setCountryKey(String COUNTRY_KEY)
+    {
+        this.COUNTRY_KEY = COUNTRY_KEY;
+    }
+
+    public String getCityKey()
+    {
+        return CITY_KEY;
+    }
+
+    public void setCityKey(String CITY_KEY)
+    {
+        this.CITY_KEY = CITY_KEY;
+    }
+
+    public SearchedArtists()
+    {
+        //TODO czy w konstruktorze ma być budowany object SearchedArtists?
+        setUrlBuilder(new UrlBuilder());
+    }
+
+    public Intent getMyIntent()
     {
         return intent;
     }
 
-    public void setExtrasFromIntent(Bundle bundle)
+    public void setMyIntent(Intent intent)
     {
-        this.extrasFromIntent = bundle;
+        this.intent = intent;
     }
 
-    public Bundle getExtrasFromIntent()
+    public Bundle getExtrasBundle()
     {
-        return extrasFromIntent;
+        return extrasBundle;
+    }
+
+    public void setExtrasBundle(Bundle bundle)
+    {
+        this.extrasBundle = bundle;
     }
 
     public String getGenreFromIntent()
@@ -91,20 +134,64 @@ public class SearchedArtists extends AppCompatActivity
         this.cityFromIntent = cityFromIntent;
     }
 
-    public void setUrlBuilder(UrlBuilder urlBuilder)
-    {
-        this.urlBuilder = urlBuilder;
-    }
-
     public UrlBuilder getUrlBuilder()
     {
         return urlBuilder;
     }
 
-    public SearchedArtists()
+    public void setUrlBuilder(UrlBuilder urlBuilder)
     {
-        super();
-        urlBuilder = new UrlBuilder();
+        this.urlBuilder = urlBuilder;
+    }
+
+    public String replaceWhiteSpaceFromString(String string)
+    {
+        try
+        {
+            string = URLEncoder.encode(string, "UTF-8");
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
+
+        return string;
+    }
+
+    public String getExtrasFromIntent(Bundle bundle, String stringKey)
+    {
+        String stringFromIntent;
+
+        stringFromIntent = bundle.getString(stringKey);
+
+        return stringFromIntent;
+    }
+
+    public Boolean checkWhiteSpaces(final String string)
+    {
+        Boolean isWhiteSpace = false;
+
+        if(string != null)
+        {
+            for(int i = 0; i < string.length(); i++)
+            {
+                if(string.contains(" "))
+                {
+                    isWhiteSpace = true;
+                    return isWhiteSpace;
+                }
+                else
+                {
+                    isWhiteSpace = false;
+                    return isWhiteSpace;
+                }
+            }
+        }
+        else
+        {
+            //TODO log that string is null
+        }
+        return isWhiteSpace;
     }
 
     @Override
@@ -115,50 +202,68 @@ public class SearchedArtists extends AppCompatActivity
 
         searchedArtists = SearchedArtists.this;
 
+        SearchedArtists searchedArtists2 = new SearchedArtists();
+
+        //TODO zastanowić się nad konwencją. Czy robić zmienne lokalne czy używać tylko metod get();4
+        //TODO dodac logi do metod
+
         Intent intent = getIntent();
 
-        setIntent(intent);
+        setMyIntent(intent);
 
-        intent = getIntentFiled();
+        intent = getMyIntent();
 
         Bundle extras = intent.getExtras();
 
-        setExtrasFromIntent(extras);
+        setExtrasBundle(extras);
 
-        extras = getExtrasFromIntent();
+        extras = getExtrasBundle();
 
-        setGenreFromIntent(extras.getString("GENRE"));
+        setCityFromIntent(getExtrasFromIntent(extras, getCityKey()));
 
-        try
+        setGenreFromIntent(getExtrasFromIntent(extras, getGenreKey()));
+
+        setCountryFromIntent(getExtrasFromIntent(extras, getCountryKey()));
+
+        String genreFromIntent = getGenreFromIntent();
+
+        if(checkWhiteSpaces(genreFromIntent))
         {
-            String genre = getGenreFromIntent();
-            genre = URLEncoder.encode(genre, "UTF-8");
-            setGenreFromIntent(genre);
+            String genreWithoutSpace = replaceWhiteSpaceFromString(genreFromIntent);
+            setGenreFromIntent(genreWithoutSpace);
         }
-        catch (UnsupportedEncodingException e)
+
+        String countryFromIntent = getCountryFromIntent();
+
+        if(checkWhiteSpaces(countryFromIntent))
         {
-            e.printStackTrace();
+            String countryWithoutSpace = replaceWhiteSpaceFromString(countryFromIntent);
+            setCountryFromIntent(countryWithoutSpace);
         }
 
-        setCountryFromIntent(extras.getString("COUNTRY"));
+        String cityFromIntent = getCityFromIntent();
 
-        setCityFromIntent(extras.getString("CITY"));
+        if(checkWhiteSpaces(cityFromIntent))
+        {
+            String cityWithoutSpace = replaceWhiteSpaceFromString(cityFromIntent);
+            setGenreFromIntent(cityWithoutSpace);
+        }
 
         getUrlBuilder().createSearchAnArtistUrl();
 
-        if(getGenreFromIntent() != null)
+        if (getGenreFromIntent() != null)
         {
             getUrlBuilder().addGenreToUrl(getGenreFromIntent());
             setGenreFromIntent(null);
         }
 
-        if(getCountryFromIntent() != null)
+        if (getCountryFromIntent() != null)
         {
             getUrlBuilder().addCountryToUrl(getCountryFromIntent());
             setCountryFromIntent(null);
         }
 
-        if(getCityFromIntent() != null)
+        if (getCityFromIntent() != null)
         {
             getUrlBuilder().addCityToUrl(getCityFromIntent());
             setCityFromIntent(null);
@@ -166,11 +271,10 @@ public class SearchedArtists extends AppCompatActivity
 
         listView = (ListView) searchedArtists.findViewById(R.id.listView2);
 
-        if(tablica == null)
+        if (tablica == null)
         {
             tablica = new ArrayList<String>();
-        }
-        else
+        } else
         {
             tablica.clear();
         }
@@ -218,4 +322,6 @@ public class SearchedArtists extends AppCompatActivity
         rQ.add(jsObjRequest);
 
     }
+
+
 }
