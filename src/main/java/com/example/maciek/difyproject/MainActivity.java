@@ -2,6 +2,7 @@ package com.example.maciek.difyproject;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -54,9 +55,68 @@ public class MainActivity extends AppCompatActivity
     String city;
     String country;
     Dialog dial;
-    MainActivity activity;
+
     LayoutInflater layoutInflater;
-    android.support.v7.app.ActionBar actionBar;
+
+
+    private Context mainActivityContext;
+
+    private MainActivity mainActivity;
+
+    private android.support.v7.app.ActionBar myActionBar;
+
+    private final String myActionBarTitle = "Dify";
+
+    MainActivity activity;
+
+
+    // < CONSTRUCTOR > //
+    public MainActivity()
+    {
+
+    }
+    // </ CONSTRUCTOR > //
+
+    public void setMainActivity(MainActivity mainActivity)
+    {
+        this.mainActivity = mainActivity;
+    }
+
+    public MainActivity getMainActivity()
+    {
+        return mainActivity;
+    }
+
+    public Context getMainActivityContext()
+    {
+        return mainActivityContext;
+    }
+
+    public void setMainActivityContext()
+    {
+        this.mainActivityContext = getApplicationContext();
+    }
+
+    public void setMyActionBar()
+    {
+        this.myActionBar = getSupportActionBar();
+    }
+
+    public android.support.v7.app.ActionBar getMyActionBar()
+    {
+        return myActionBar;
+    }
+
+    public void configureMyActionBar(android.support.v7.app.ActionBar myActionBar)
+    {
+        myActionBar.setTitle(getMyActionBarTitle());
+
+    }
+
+    public String getMyActionBarTitle()
+    {
+        return myActionBarTitle;
+    }
 
 
     @Override
@@ -65,14 +125,21 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        activity = MainActivity.this; //TODO improve declaration
+        setMyActionBar();
 
-        //lstring.add(str);
+        android.support.v7.app.ActionBar myActionBar = getMyActionBar();
 
-        actionBar = getSupportActionBar();
-        actionBar.setTitle("Dify");
+        configureMyActionBar(myActionBar);
 
-        dial = new Dialog(MainActivity.this);
+        setMyActionBar();
+
+        setMainActivityContext();
+
+        Context mainActivityContext = getMainActivityContext();
+
+        activity = MainActivity.this;
+
+        dial = new Dialog(mainActivityContext);
         genreButton = (Button) findViewById(R.id.button2);
         countryButton = (Button) findViewById(R.id.button3);
         cityButton = (Button) findViewById(R.id.button4);
