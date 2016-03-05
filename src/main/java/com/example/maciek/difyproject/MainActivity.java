@@ -1,5 +1,6 @@
 package com.example.maciek.difyproject;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -41,23 +42,17 @@ public class MainActivity extends AppCompatActivity
 {
     List<String> lstring;
     AlertDialog.Builder builder;
-    Dialog dialog;
     ArrayAdapter<String> modeAdapter;
     ListView modeList;
     EditText inputSearch;
-    Button genreButton;
-    Button countryButton;
-    Button cityButton;
-    Button searchButton;
-    EditText editText;
     String tempo;
     String genre;
     String city;
     String country;
-    Dialog dial;
 
     LayoutInflater layoutInflater;
 
+    MainActivity activity;
 
     private Context mainActivityContext;
 
@@ -67,9 +62,22 @@ public class MainActivity extends AppCompatActivity
 
     private final String myActionBarTitle = "Dify";
 
-    MainActivity activity;
+    private Activity myCurrentActivity;
 
+    private Dialog myDialog;
 
+    Dialog dial;
+    Dialog dialog;
+
+    // < BUTTONS > //
+    private Button genreButton;
+    private Button countryButton;
+    private Button cityButton;
+    private Button searchButton;
+    // </ BUTTONS > //
+
+    // < EDITTEXT >
+    private EditText myEditText;
     // < CONSTRUCTOR > //
     public MainActivity()
     {
@@ -77,7 +85,77 @@ public class MainActivity extends AppCompatActivity
     }
     // </ CONSTRUCTOR > //
 
-    public void setMainActivity(MainActivity mainActivity)
+    public void setMyEditText(EditText myEditText)
+    {
+        this.myEditText = myEditText;
+    }
+
+    public EditText getMyEditText()
+    {
+        return myEditText;
+    }
+
+    public void setGenreButton(Button genreButton)
+    {
+        this.genreButton = genreButton;
+    }
+
+    public Button getGenreButton()
+    {
+        return genreButton;
+    }
+
+    public void setCountryButton(Button countryButton)
+    {
+        this.countryButton = countryButton;
+    }
+
+    public Button getcountryButton()
+    {
+        return countryButton;
+    }
+
+    public void setCityButton(Button cityButton)
+    {
+        this.cityButton = cityButton;
+    }
+
+    public Button getCityButton()
+    {
+        return cityButton;
+    }
+
+    public void setSearchButton(Button searchButton)
+    {
+        this.searchButton = searchButton;
+    }
+
+    public Button getSearchButton()
+    {
+        return searchButton;
+    }
+
+    public Dialog getMyDialog()
+    {
+        return myDialog;
+    }
+
+    public void setMyDialog(Dialog myDialogialog)
+    {
+        this.myDialog = myDialog;
+    }
+
+    public void setMyCurrentActivity(Activity currentActivity)
+    {
+        this.myCurrentActivity = currentActivity;
+    }
+
+    public Activity getMyCurrentActivity()
+    {
+        return myCurrentActivity;
+    }
+
+    public void setMainActivityActivity(MainActivity mainActivity)
     {
         this.mainActivity = mainActivity;
     }
@@ -139,12 +217,24 @@ public class MainActivity extends AppCompatActivity
 
         activity = MainActivity.this;
 
-        dial = new Dialog(mainActivityContext);
-        genreButton = (Button) findViewById(R.id.button2);
-        countryButton = (Button) findViewById(R.id.button3);
-        cityButton = (Button) findViewById(R.id.button4);
-        searchButton = (Button) findViewById(R.id.button);
-        editText = (EditText) findViewById(R.id.editTextDialog);
+        Dialog dialog = new Dialog(mainActivityContext);
+
+        setMyDialog(dialog);
+
+        Button genreButton = (Button) findViewById(R.id.genreButton);
+        setGenreButton(genreButton);
+
+        Button countryButton = (Button) findViewById(R.id.countryButton);
+        setCountryButton(countryButton);
+
+        Button cityButton = (Button) findViewById(R.id.cityButton);
+        setCityButton(cityButton);
+
+        Button searchButton = (Button) findViewById(R.id.searchButton);
+        setSearchButton(searchButton);
+
+        EditText editText = (EditText) findViewById(R.id.editTextDialog);
+        setMyEditText(editText);
 
         genreButton.setOnClickListener(new View.OnClickListener()
         {
@@ -153,8 +243,7 @@ public class MainActivity extends AppCompatActivity
             {
                 getGenres();
                 prepareDialog();
-                showDialog(genreButton);
-                Log.d("DEBUG", "genre:" + genre);
+                showDialog(getGenreButton());
             }
         });
 
@@ -163,9 +252,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                Log.d("DEBUG", "String before iniliaze coutry:" + tempo);
-                dialogWithEditTextOnly(countryButton, v);
-                Log.d("DEBUG", "String after initialize country:" + country);
+                dialogWithEditTextOnly(getcountryButton(), v);
             }
         });
 
@@ -174,9 +261,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                Log.d("DEBUG", "String before iniliaze city:" + tempo);
-                dialogWithEditTextOnly(cityButton, v);
-                Log.d("DEBUG", "String after initialize city:" + city);
+                dialogWithEditTextOnly(getCityButton(), v);
             }
         });
 
@@ -200,7 +285,7 @@ public class MainActivity extends AppCompatActivity
     public void dialogWithEditTextOnly(final Button tempButton, final View v)
     {
         final AlertDialog.Builder cityDialog = new AlertDialog.Builder(activity, R.style.AlertDialogCustom);
-        final LayoutInflater cityLayout = activity.getLayoutInflater();
+        final LayoutInflater cityLayout = activity.getLayoutInflater(); //TODO getActivity().getLayoutInflater();
         final View dialogview = cityLayout.inflate(R.layout.dialog_edit_text, null);
         cityDialog.setView(dialogview);
         cityDialog.setTitle("Select");
@@ -215,12 +300,12 @@ public class MainActivity extends AppCompatActivity
 
                 switch (v.getId())
                 {
-                    case R.id.button3:
+                    case R.id.countryButton:
                         country = editText.getText().toString();
                         tempButton.setText(country);
                         break;
 
-                    case R.id.button4:
+                    case R.id.cityButton:
                         city = editText.getText().toString();
                         tempButton.setText(city);
                         break;
