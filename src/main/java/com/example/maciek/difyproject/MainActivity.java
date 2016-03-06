@@ -38,6 +38,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+//jakis komenatzr
+
 public class MainActivity extends AppCompatActivity
 {
     List<String> lstring;
