@@ -112,32 +112,66 @@ public class DialogBuilder
 
     public void createAlertDialogBuilder(Context context)
     {
-        int dialogLayout = getDialogStyle();
-        AlertDialog.Builder alertDiaBuilder= new AlertDialog.Builder(context, dialogLayout);
+        int dialogStyle = getDialogStyle();
+        AlertDialog.Builder alertDiaBuilder= new AlertDialog.Builder(context, dialogStyle);
         setAlertDialogBuilder(alertDiaBuilder);
     }
 
-    public void createLayoutInflater(Activity currentActivity)
+    //public void createLayoutInflater(Activity currentActivity)
+    public void createLayoutInflater(Context context)
     {
-        LayoutInflater layoutInflater= currentActivity.getLayoutInflater(); //TODO getActivity().getLayoutInflater();
+        //LayoutInflater: it takes as input an XML file and builds the View objects from it.
+        //Coretc way: LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        
+        //Old one: LayoutInflater layoutInflater= currentActivity.getLayoutInflater(); //TODO getActivity().getLayoutInflater();
+        
+        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        
         setLayoutInflater(layoutInflater);
     }
 
-    public void createDialogView(LayoutInflater layoutInflater)
+    public void createDialogView(int dialogLayout);
     {
-        int dialogLayout = getDialogLayoutWithEditText();
+        //int dialogLayout = getDialogLayoutWithEditText();
+        
+        LayoutInflater layoutInflater = getLayoutInflater();
+        
         View dialogview = layoutInflater.inflate(dialogLayout, null);
+        
+        setDialogView(dialogView);
     }
 
-    public void configureDialog(AlertDialog.Builder alertDialogBuilder, View dialogView, String title)
+    public void configureDialog(View dialogView, String title)
     {
+        alertDialog.Builder alertDialogBuilder = getAlertDialogBuilder();
+        
         alertDialogBuilder.setView(dialogView);
+        
         alertDialogBuilder.setTitle(title);
     }
-
-    public void configurePositiveButtonOfDialog(AlertDialog.Builder alertDialogBuilder, final View v)
+    
+    /*public void getClickedButton(View v)
     {
-        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+        //TODO czy funkcja będzie potrzebna
+    }*/
+    
+    public void setTitleOfButtonsAfterDialogDismiss(EditText editText, Button button)
+    {
+        String title;
+        
+
+        countryString = editText.getText().toString();
+
+        button.setText(countryString);
+    }
+
+    public void configurePositiveButtonOfDialog(final View v)
+    {
+        String buttonTitle = "OK";
+        
+        lertDialog.Builder alertDialogBuilder = getalertDialogBuilder();
+        
+        alertDialogBuilder.setPositiveButton(buttonTitle, new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialog, int id)
@@ -151,26 +185,18 @@ public class DialogBuilder
                 switch (v.getId())
                 {
                     case R.id.countryButton:
-
-                        String countryString;
-
-                        Button countryButton = mainActivity.getcountryButton();
-
-                        countryString = editText.getText().toString();
-
-                        countryButton.setText(countryString);
+                        
+                        Button countryButton = mainActivity.getCountryButton();
+                        
+                        setTitleOfButtonsAfterDialogDismiss(editText, countryButton);
 
                         break;
 
                     case R.id.cityButton:
 
-                        String cityString;
-
                         Button cityButton = mainActivity.getCityButton();
-
-                        cityString = editText.getText().toString();
-
-                        cityButton.setText(cityString);
+                        
+                        setTitleOfButtonsAfterDialogDismiss(editText, cityButton);
 
                         break;
                 }
