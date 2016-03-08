@@ -155,7 +155,7 @@ public class DialogBuilder
         //TODO czy funkcja będzie potrzebna
     }*/
     
-    public void setButtonTitleAfterDialogDismiss(Button button)
+    public void setButtonTitleAfterPositiveDialogDismiss(Button button)
     {
         String title;
         
@@ -165,7 +165,32 @@ public class DialogBuilder
 
         title = editText.getText().toString();
 
+        button.setText(title);
+    }
+    
+    public void setButtonTitleAfterNegativeDialogDismiss(Button button)
+    {
+        String title = "SELECT";
+
         button.setText(countryString);
+    }
+    
+    public void makeNullCountryString()
+    {
+        String countryStirng = getCountryString();
+        
+        countryStirng = null;
+        
+        setCountryString(countryString);
+    }
+    
+    public void makeNullCityString()
+    {
+        String cityStirng = getCityString();
+        
+        cityStirng = null;
+        
+        setCityString(cityString);
     }
 
     public void configurePositiveButtonOfDialog(final View v)
@@ -187,7 +212,7 @@ public class DialogBuilder
                         
                         Button countryButton = mainActivity.getCountryButton();
                         
-                        setButtonTitleAfterDialogDismiss(countryButton);
+                        setButtonTitleAfterPositiveDialogDismiss(countryButton);
 
                         break;
 
@@ -195,7 +220,7 @@ public class DialogBuilder
 
                         Button cityButton = mainActivity.getCityButton();
                         
-                        setButtonTitleAfterDialogDismiss(cityButton);
+                        setButtonTitleAfterPositiveDialogDismiss((cityButton);
 
                         break;
                 }
@@ -221,7 +246,9 @@ public class DialogBuilder
                         
                         Button countryButton = mainActivity.getCountryButton();
                         
-                        setButtonTitleAfterDialogDismiss(countryButton);
+                        setButtonTitleAfterNegativeDialogDismiss(countryButton);
+                        
+                        makeNullCountryString();
 
                         break;
 
@@ -229,7 +256,9 @@ public class DialogBuilder
 
                         Button cityButton = mainActivity.getCityButton();
                         
-                        setButtonTitleAfterDialogDismiss(cityButton);
+                        setButtonTitleAfterNegativeDialogDismiss(cityButton);
+                        
+                        makeNullCityString();
 
                         break;
                 }
