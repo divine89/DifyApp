@@ -155,12 +155,15 @@ public class DialogBuilder
         //TODO czy funkcja będzie potrzebna
     }*/
     
-    public void setTitleOfButtonsAfterDialogDismiss(EditText editText, Button button)
+    public void setButtonTitleAfterDialogDismiss(Button button)
     {
         String title;
         
+        Dialog mainDialog = getMyDialog();
 
-        countryString = editText.getText().toString();
+        EditText editText = (EditText) mainDialog.findViewById(R.id.editTextDialog);
+
+        title = editText.getText().toString();
 
         button.setText(countryString);
     }
@@ -169,7 +172,7 @@ public class DialogBuilder
     {
         String buttonTitle = "OK";
         
-        lertDialog.Builder alertDialogBuilder = getalertDialogBuilder();
+        AlertDialog.Builder alertDialogBuilder = getalertDialogBuilder();
         
         alertDialogBuilder.setPositiveButton(buttonTitle, new DialogInterface.OnClickListener()
         {
@@ -178,17 +181,13 @@ public class DialogBuilder
             {
                 MainActivity mainActivity = new MainActivity();
 
-                Dialog mainDialog = getMyDialog();
-
-                EditText editText = (EditText) mainDialog.findViewById(R.id.editTextDialog);
-
                 switch (v.getId())
                 {
                     case R.id.countryButton:
                         
                         Button countryButton = mainActivity.getCountryButton();
                         
-                        setTitleOfButtonsAfterDialogDismiss(editText, countryButton);
+                        setButtonTitleAfterDialogDismiss(countryButton);
 
                         break;
 
@@ -196,7 +195,7 @@ public class DialogBuilder
 
                         Button cityButton = mainActivity.getCityButton();
                         
-                        setTitleOfButtonsAfterDialogDismiss(editText, cityButton);
+                        setButtonTitleAfterDialogDismiss(cityButton);
 
                         break;
                 }
@@ -204,12 +203,39 @@ public class DialogBuilder
         });
     }
 
-    public void configureNegativeButtonOfDialog(AlertDialog.Builder alertDialogBuilder)
+    public void configureNegativeButtonOfDialog(final View v)
     {
-        alertDialogBuilder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
+        String buttonTitle = "CANCEL";
+        
+        AlertDialog.Builder alertDialogBuilder = getAlertDialogBuilder();
+        
+        alertDialogBuilder.setNegativeButton(buttonTitle, new DialogInterface.OnClickListener()
         {
             public void onClick(DialogInterface dialog, int id)
             {
+                MainActivity mainActivity = new MainActivity();
+
+                switch (v.getId())
+                {
+                    case R.id.countryButton:
+                        
+                        Button countryButton = mainActivity.getCountryButton();
+                        
+                        setButtonTitleAfterDialogDismiss(countryButton);
+
+                        break;
+
+                    case R.id.cityButton:
+
+                        Button cityButton = mainActivity.getCityButton();
+                        
+                        setButtonTitleAfterDialogDismiss(cityButton);
+
+                        break;
+                }
+                
+                Dialog dialog = getMyDialog();
+                
                 dialog.dismiss();
             }
         });
