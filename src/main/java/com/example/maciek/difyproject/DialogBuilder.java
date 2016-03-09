@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,8 @@ public class DialogBuilder
         int dialogLayoutWithEditText = R.layout.dialog_edit_text;
         setDialogLayoutWithEditText(dialogLayoutWithEditText);
     }
+
+
 
     public void setCountryString(String countryString)
     {
@@ -112,6 +115,7 @@ public class DialogBuilder
 
     public void createAlertDialogBuilder(Context context)
     {
+        Log.d("DEBUS", "createAlertDialogBuilder");
         int dialogStyle = getDialogStyle();
         AlertDialog.Builder alertDiaBuilder= new AlertDialog.Builder(context, dialogStyle);
         setAlertDialogBuilder(alertDiaBuilder);
@@ -120,43 +124,46 @@ public class DialogBuilder
     //public void createLayoutInflater(Activity currentActivity)
     public void createLayoutInflater(Context context)
     {
+        Log.d("DEBUS", "createLayoutInflater");
         //LayoutInflater: it takes as input an XML file and builds the View objects from it.
         //Coretc way: LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         
         //Old one: LayoutInflater layoutInflater= currentActivity.getLayoutInflater(); //TODO getActivity().getLayoutInflater();
         
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         
         setLayoutInflater(layoutInflater);
     }
 
-    public void createDialogView(int dialogLayout);
+    public void createDialogView(int dialogLayout)
     {
         //int dialogLayout = getDialogLayoutWithEditText();
-        
+        Log.d("DEBUS", "createDialogView");
+
+        //dialogLayout = getDialogLayoutWithEditText();
+
         LayoutInflater layoutInflater = getLayoutInflater();
         
         View dialogview = layoutInflater.inflate(dialogLayout, null);
         
-        setDialogView(dialogView);
+        setDialogView(dialogview);
     }
 
     public void configureDialog(View dialogView, String title)
     {
-        alertDialog.Builder alertDialogBuilder = getAlertDialogBuilder();
+        Log.d("DEBUS", "configureDialog");
+
+        AlertDialog.Builder alertDialogBuilder = getAlertDialogBuilder();
         
         alertDialogBuilder.setView(dialogView);
         
         alertDialogBuilder.setTitle(title);
     }
     
-    /*public void getClickedButton(View v)
+    public void setButtonTitleAfterPositiveDialogDismiss(View v, Button button)
     {
-        //TODO czy funkcja będzie potrzebna
-    }*/
-    
-    public void setButtonTitleAfterPositiveDialogDismiss(Button button)
-    {
+        Log.d("DEBUS", "setButtonTitleAfterPositiveDialogDismiss");
+
         String title;
         
         Dialog mainDialog = getMyDialog();
@@ -167,60 +174,79 @@ public class DialogBuilder
 
         button.setText(title);
     }
+
+    public String getTextFromEditText()
+    {
+        String title;
+
+        Dialog mainDialog = getMyDialog();
+
+        EditText editText = (EditText) mainDialog.findViewById(R.id.editTextDialog);
+
+        title = editText.getText().toString();
+
+        Log.d("DEBUG", "DialogBuilder title:"+title);
+
+        return title;
+    }
     
     public void setButtonTitleAfterNegativeDialogDismiss(Button button)
     {
+        Log.d("DEBUS", "setButtonTitleAfterNegativeDialogDismiss");
+
         String title = "SELECT";
 
-        button.setText(countryString);
+        button.setText(title);
     }
     
     public void makeNullCountryString()
     {
-        String countryStirng = getCountryString();
+        Log.d("DEBUS", "makeNullCountryString");
+
+        String country = getCountryString();
         
-        countryStirng = null;
+        country = null;
         
-        setCountryString(countryString);
+        setCountryString(country);
     }
     
     public void makeNullCityString()
     {
-        String cityStirng = getCityString();
+        Log.d("DEBUS", "makeNullCityString");
+
+        String city = getCityString();
+
+        city = null;
         
-        cityStirng = null;
-        
-        setCityString(cityString);
+        setCityString(city);
     }
 
-    public void configurePositiveButtonOfDialog(final View v)
+    public void configurePositiveButtonOfDialog(final View v, final Button countryButton, final Button cityButton)
     {
+        Log.d("DEBUS", "configurePositiveButtonOfDialog");
+
         String buttonTitle = "OK";
-        
-        AlertDialog.Builder alertDialogBuilder = getalertDialogBuilder();
-        
+
+        AlertDialog.Builder alertDialogBuilder = getAlertDialogBuilder();
+
         alertDialogBuilder.setPositiveButton(buttonTitle, new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialog, int id)
             {
-                MainActivity mainActivity = new MainActivity();
+
 
                 switch (v.getId())
                 {
                     case R.id.countryButton:
-                        
-                        Button countryButton = mainActivity.getCountryButton();
-                        
-                        setButtonTitleAfterPositiveDialogDismiss(countryButton);
+
+                        setButtonTitleAfterPositiveDialogDismiss(v, countryButton);
 
                         break;
 
                     case R.id.cityButton:
 
-                        Button cityButton = mainActivity.getCityButton();
-                        
-                        setButtonTitleAfterPositiveDialogDismiss((cityButton);
+                        setButtonTitleAfterPositiveDialogDismiss(v, cityButton);
 
                         break;
                 }
@@ -228,8 +254,10 @@ public class DialogBuilder
         });
     }
 
-    public void configureNegativeButtonOfDialog(final View v)
+    public void configureNegativeButtonOfDialog(final View v, final Button countryButton, final Button cityButton)
     {
+        Log.d("DEBUS", "configureNegativeButtonOfDialog");
+
         String buttonTitle = "CANCEL";
         
         AlertDialog.Builder alertDialogBuilder = getAlertDialogBuilder();
@@ -238,14 +266,10 @@ public class DialogBuilder
         {
             public void onClick(DialogInterface dialog, int id)
             {
-                MainActivity mainActivity = new MainActivity();
-
                 switch (v.getId())
                 {
                     case R.id.countryButton:
-                        
-                        Button countryButton = mainActivity.getCountryButton();
-                        
+
                         setButtonTitleAfterNegativeDialogDismiss(countryButton);
                         
                         makeNullCountryString();
@@ -254,54 +278,52 @@ public class DialogBuilder
 
                     case R.id.cityButton:
 
-                        Button cityButton = mainActivity.getCityButton();
-                        
                         setButtonTitleAfterNegativeDialogDismiss(cityButton);
                         
                         makeNullCityString();
 
                         break;
                 }
-                
-                Dialog dialog = getMyDialog();
-                
-                dialog.dismiss();
+
             }
         });
     }
 
-    public void createDialogWithEditText(Context context, Activity currentActivity, View v)
+    public Dialog createDialogWithEditText(Context context, Activity currentActivity, View v, Button countryButton, Button cityButton)
     {
+
         createAlertDialogBuilder(context);
 
         AlertDialog.Builder alertDialogBuilder = getAlertDialogBuilder();
 
-        createLayoutInflater(currentActivity);
+        createLayoutInflater(context);
 
-        LayoutInflater layoutInflater = getLayoutInflater();
+        int dialogLayout = R.layout.dialog_edit_text;
 
-        createDialogView(layoutInflater);
+        createDialogView(dialogLayout);
 
         View dialogView = getDialogView();
 
         String title = "SELECT";
 
-        configureDialog(alertDialogBuilder, dialogView, title);
+        configureDialog(dialogView, title);
 
-        configurePositiveButtonOfDialog(alertDialogBuilder, v);
+        configurePositiveButtonOfDialog(v, countryButton, cityButton);
 
-        configureNegativeButtonOfDialog(alertDialogBuilder);
+        configureNegativeButtonOfDialog(v, countryButton, cityButton);
 
-        Dialog dialog;
+        return alertDialogBuilder.create();
 
-        dialog = alertDialogBuilder.create();
 
-        setDialog(dialog);
     }
 
     public void showMyDialog()
     {
+        Log.d("DEBUS", "showMyDialog");
+
         Dialog dialog = getMyDialog();
+
         dialog.show();
+
     }
 }

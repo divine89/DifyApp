@@ -71,10 +71,12 @@ public class MainActivity extends AppCompatActivity
     Dialog dial;
     Dialog dialog;
 
+    private String buttonTitle;
+
     // < BUTTONS > //
     private Button genreButton;
-    private Button countryButton;
-    private Button cityButton;
+    public Button countryButton;
+    public Button cityButton;
     private Button searchButton;
     // </ BUTTONS > //
 
@@ -83,9 +85,18 @@ public class MainActivity extends AppCompatActivity
     // < CONSTRUCTOR > //
     public MainActivity()
     {
-
     }
     // </ CONSTRUCTOR > //
+
+    public void setButtonTitle(String buttonTitle)
+    {
+        this.buttonTitle = buttonTitle;
+    }
+
+    public String getButtonTitle()
+    {
+        return buttonTitle;
+    }
 
     public void setMyEditText(EditText myEditText)
     {
@@ -112,7 +123,7 @@ public class MainActivity extends AppCompatActivity
         this.countryButton = countryButton;
     }
 
-    public Button getcountryButton()
+    public Button getCountryButton()
     {
         return countryButton;
     }
@@ -219,17 +230,17 @@ public class MainActivity extends AppCompatActivity
 
         activity = MainActivity.this;
 
-        Dialog dialog = new Dialog(mainActivityContext);
+        final Dialog dialog = new Dialog(mainActivityContext);
 
         setMyDialog(dialog);
 
         Button genreButton = (Button) findViewById(R.id.genreButton);
         setGenreButton(genreButton);
 
-        Button countryButton = (Button) findViewById(R.id.countryButton);
+        final Button countryButton = (Button) this.findViewById(R.id.countryButton);
         setCountryButton(countryButton);
 
-        Button cityButton = (Button) findViewById(R.id.cityButton);
+        final Button cityButton = (Button) findViewById(R.id.cityButton);
         setCityButton(cityButton);
 
         Button searchButton = (Button) findViewById(R.id.searchButton);
@@ -254,7 +265,33 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                dialogWithEditTextOnly(getcountryButton(), v);
+                //dialogWithEditTextOnly(getCountryButton(), v);
+
+                DialogBuilder dialogBuilder = new DialogBuilder();
+
+                Context context = getBaseContext();
+
+                Activity activity = getMyCurrentActivity();
+
+                Dialog dialog = dialogBuilder.createDialogWithEditText(MainActivity.this, activity, v, countryButton, cityButton);
+
+                dialogBuilder.setDialog(dialog);
+
+                Log.d("DEBUG", "Before show Dialog");
+
+                dialogBuilder.showMyDialog();
+
+                Log.d("DEBUG", "After show Dialog");
+
+                //Dialog dialog = getMyDialog();
+
+                //AlertDialog.Builder alert = dialogBuilder.getAlertDialogBuilder();
+
+                //dial = alert.create();
+
+                //dial.show();
+
+                //dialogBuilder.showMyDialog();
             }
         });
 
@@ -282,6 +319,30 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+    }
+
+    public void setButtonsTitle(View v)
+    {
+        String title = getButtonTitle();
+
+        switch (v.getId())
+        {
+            case R.id.countryButton:
+
+                Button countryButton = getCountryButton();
+
+                countryButton.setText(title);
+
+                break;
+
+            case R.id.cityButton:
+
+                Button cityButton = getCityButton();
+
+                cityButton.setText(title);
+
+                break;
+        }
     }
 
     public void dialogWithEditTextOnly(final Button tempButton, final View v)
