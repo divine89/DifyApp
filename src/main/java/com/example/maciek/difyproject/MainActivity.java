@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -13,10 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -48,9 +45,9 @@ public class MainActivity extends AppCompatActivity
     ListView modeList;
     EditText inputSearch;
     String tempo;
-    String genre;
-    String city;
-    String country;
+    private String genre;
+    private String city;
+    private String country;
 
     LayoutInflater layoutInflater;
 
@@ -87,6 +84,36 @@ public class MainActivity extends AppCompatActivity
     {
     }
     // </ CONSTRUCTOR > //
+
+    public String getGenre()
+    {
+        return genre;
+    }
+
+    public void setGenre(String genre)
+    {
+        this.genre = genre;
+    }
+
+    public String getCity()
+    {
+        return city;
+    }
+
+    public void setCity(String city)
+    {
+        this.city = city;
+    }
+
+    public String getCountry()
+    {
+        return country;
+    }
+
+    public void setCountry(String country)
+    {
+        this.country = country;
+    }
 
     public void setButtonTitle(String buttonTitle)
     {
@@ -254,9 +281,16 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                getGenres();
-                prepareDialog();
-                showDialog(getGenreButton());
+                //getGenres();
+               // prepareDialog();
+                //showDialog(getGenreButton());
+                DialogBuilder dialogBuilder = new DialogBuilder();
+
+                Dialog dialog = dialogBuilder.createDialogWithListView(MainActivity.this);
+
+                dialogBuilder.setDialog(dialog);
+
+                dialogBuilder.showMyDialog();
             }
         });
 
@@ -265,33 +299,21 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                //dialogWithEditTextOnly(getCountryButton(), v);
-
                 DialogBuilder dialogBuilder = new DialogBuilder();
-
-                Context context = getBaseContext();
 
                 Activity activity = getMyCurrentActivity();
 
-                Dialog dialog = dialogBuilder.createDialogWithEditText(MainActivity.this, activity, v, countryButton, cityButton);
+                Button countryButton = getCountryButton();
+
+                Dialog dialog = dialogBuilder.createDialogWithEditText(MainActivity.this, activity, v, countryButton); //TODO poprawić ustawianie tytułu button po nacisnieciu OK w dialogu
 
                 dialogBuilder.setDialog(dialog);
 
-                Log.d("DEBUG", "Before show Dialog");
-
                 dialogBuilder.showMyDialog();
 
-                Log.d("DEBUG", "After show Dialog");
+                String title = countryButton.getText().toString();
 
-                //Dialog dialog = getMyDialog();
-
-                //AlertDialog.Builder alert = dialogBuilder.getAlertDialogBuilder();
-
-                //dial = alert.create();
-
-                //dial.show();
-
-                //dialogBuilder.showMyDialog();
+                setCountry(title);
             }
         });
 
@@ -300,7 +322,21 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                dialogWithEditTextOnly(getCityButton(), v);
+                DialogBuilder dialogBuilder = new DialogBuilder();
+
+                Activity activity = getMyCurrentActivity();
+
+                Button cityButton = getCityButton();
+
+                Dialog dialog = dialogBuilder.createDialogWithEditText(MainActivity.this, activity, v, cityButton); //TODO poprawić ustawianie tytułu button po nacisnieciu OK w dialogu
+
+                dialogBuilder.setDialog(dialog);
+
+                dialogBuilder.showMyDialog();
+
+                String title = cityButton.getText().toString();
+
+                setCity(title);
             }
         });
 
@@ -312,16 +348,16 @@ public class MainActivity extends AppCompatActivity
                 Intent intent = new Intent(activity, SearchedArtists.class);
                 intent.setClass(MainActivity.this, SearchedArtists.class);
                 intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra("COUNTRY", country);
-                intent.putExtra("CITY", city);
-                intent.putExtra("GENRE", genre);
+                intent.putExtra("COUNTRY", getCountry());
+                intent.putExtra("CITY", getCity());
+                intent.putExtra("GENRE", getGenre());
                 intent.setType("text/plain");
                 startActivity(intent);
             }
         });
     }
 
-    public void setButtonsTitle(View v)
+    /*public void setButtonsTitle(View v)
     {
         String title = getButtonTitle();
 
@@ -343,50 +379,7 @@ public class MainActivity extends AppCompatActivity
 
                 break;
         }
-    }
-
-    public void dialogWithEditTextOnly(final Button tempButton, final View v)
-    {
-        final AlertDialog.Builder cityDialog = new AlertDialog.Builder(activity, R.style.AlertDialogCustom);
-        final LayoutInflater cityLayout = activity.getLayoutInflater(); //TODO getActivity().getLayoutInflater();
-        final View dialogview = cityLayout.inflate(R.layout.dialog_edit_text, null);
-        cityDialog.setView(dialogview);
-        cityDialog.setTitle("Select");
-        tempo = null;
-
-        cityDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int id)
-            {
-                EditText editText = (EditText) dial.findViewById(R.id.editTextDialog);
-
-                switch (v.getId())
-                {
-                    case R.id.countryButton:
-                        country = editText.getText().toString();
-                        tempButton.setText(country);
-                        break;
-
-                    case R.id.cityButton:
-                        city = editText.getText().toString();
-                        tempButton.setText(city);
-                        break;
-                }
-            }
-        });
-
-        cityDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-        {
-            public void onClick(DialogInterface dialog, int id)
-            {
-                dialog.dismiss();
-            }
-        });
-
-        dial = cityDialog.create();
-        dial.show();
-    }
+    }*/
 
     public void prepareDialog()
     {
@@ -465,14 +458,14 @@ public class MainActivity extends AppCompatActivity
             {
                 TextView temp = (TextView) view;
                 // Toast.makeText(activity, temp.getText(), Toast.LENGTH_SHORT).show();
-                genre = temp.getText().toString();
-                myButton.setText(genre);
+                setGenre(temp.getText().toString());
+                myButton.setText(getGenre());
                 dialog.dismiss();
             }
         });
     }
 
-    void getGenres()
+    public void getGenres(final ListViewBuilder listViewBuilder)
     {
         String url = "http://developer.echonest.com/api/v4/genre/list?api_key=SXZNUZ73HVWJ7T5V1&format=json";
 
@@ -493,7 +486,8 @@ public class MainActivity extends AppCompatActivity
                             {
                                 JSONObject object = jsonArray.getJSONObject(i);
                                 String genre = object.getString("name");
-                                lstring.add(genre);
+                                List<String> listString = listViewBuilder.getListString();
+                                listString.add(genre);
                             }
                         } catch (JSONException e)
                         {
@@ -513,4 +507,6 @@ public class MainActivity extends AppCompatActivity
 
         rQ.add(jsObjRequest);
     }
+
+
 }

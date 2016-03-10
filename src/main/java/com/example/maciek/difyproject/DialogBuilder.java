@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+
+import java.util.List;
 
 public class DialogBuilder
 {
@@ -30,7 +33,6 @@ public class DialogBuilder
         int dialogLayoutWithEditText = R.layout.dialog_edit_text;
         setDialogLayoutWithEditText(dialogLayoutWithEditText);
     }
-
 
 
     public void setCountryString(String countryString)
@@ -185,18 +187,33 @@ public class DialogBuilder
 
         title = editText.getText().toString();
 
-        Log.d("DEBUG", "DialogBuilder title:"+title);
+        Log.d("DEBUG", "DialogBuilder title:" + title);
 
         return title;
     }
     
-    public void setButtonTitleAfterNegativeDialogDismiss(Button button)
+    public void setButtonTitleAfterNegativeDialogDismiss(Button button, View v)
     {
         Log.d("DEBUS", "setButtonTitleAfterNegativeDialogDismiss");
 
         String title = "SELECT";
 
         button.setText(title);
+
+        switch (v.getId())
+        {
+            case R.id.countryButton:
+
+                makeNullCountryString();
+
+                break;
+
+            case R.id.cityButton:
+
+                makeNullCityString();
+
+                break;
+        }
     }
     
     public void makeNullCountryString()
@@ -221,7 +238,7 @@ public class DialogBuilder
         setCityString(city);
     }
 
-    public void configurePositiveButtonOfDialog(final View v, final Button countryButton, final Button cityButton)
+    public void configurePositiveButtonOfDialog(final View v, final Button button)
     {
         Log.d("DEBUS", "configurePositiveButtonOfDialog");
 
@@ -235,26 +252,12 @@ public class DialogBuilder
             public void onClick(DialogInterface dialog, int id)
             {
 
-
-                switch (v.getId())
-                {
-                    case R.id.countryButton:
-
-                        setButtonTitleAfterPositiveDialogDismiss(v, countryButton);
-
-                        break;
-
-                    case R.id.cityButton:
-
-                        setButtonTitleAfterPositiveDialogDismiss(v, cityButton);
-
-                        break;
-                }
+                setButtonTitleAfterPositiveDialogDismiss(v, button);
             }
         });
     }
 
-    public void configureNegativeButtonOfDialog(final View v, final Button countryButton, final Button cityButton)
+    public void configureNegativeButtonOfDialog(final View v, final Button button)
     {
         Log.d("DEBUS", "configureNegativeButtonOfDialog");
 
@@ -266,32 +269,13 @@ public class DialogBuilder
         {
             public void onClick(DialogInterface dialog, int id)
             {
-                switch (v.getId())
-                {
-                    case R.id.countryButton:
-
-                        setButtonTitleAfterNegativeDialogDismiss(countryButton);
-                        
-                        makeNullCountryString();
-
-                        break;
-
-                    case R.id.cityButton:
-
-                        setButtonTitleAfterNegativeDialogDismiss(cityButton);
-                        
-                        makeNullCityString();
-
-                        break;
-                }
-
+                setButtonTitleAfterNegativeDialogDismiss(button, v);
             }
         });
     }
 
-    public Dialog createDialogWithEditText(Context context, Activity currentActivity, View v, Button countryButton, Button cityButton)
+    public Dialog createDialogWithEditText(Context context, Activity currentActivity, View v, Button button)
     {
-
         createAlertDialogBuilder(context);
 
         AlertDialog.Builder alertDialogBuilder = getAlertDialogBuilder();
@@ -308,13 +292,46 @@ public class DialogBuilder
 
         configureDialog(dialogView, title);
 
-        configurePositiveButtonOfDialog(v, countryButton, cityButton);
+        configurePositiveButtonOfDialog(v, button);
 
-        configureNegativeButtonOfDialog(v, countryButton, cityButton);
+        configureNegativeButtonOfDialog(v, button);
 
         return alertDialogBuilder.create();
+    }
 
+    public Dialog createDialogWithListView(Context context)
+    {
+        createAlertDialogBuilder(context);
 
+        AlertDialog.Builder alertDialogBuilder = getAlertDialogBuilder();
+
+        createLayoutInflater(context);
+
+        int dialogLayout = R.layout.list_view;
+
+        createDialogView(dialogLayout);
+
+        View dialogView = getDialogView();
+
+        String title = "SELECT";
+
+        configureDialog(dialogView, title);
+
+        ListViewBuilder listViewBuilder = new ListViewBuilder();
+
+        int id = R.id.listView;
+
+        listViewBuilder.configureListView(dialogView, id);
+
+        ListView listView = listViewBuilder.getListView();
+
+        listViewBuilder.configureListStrings();
+
+        List<String> stringList = listViewBuilder.getListString();
+
+        listViewBuilder.configureArrayAdapter(listView, context, stringList);
+
+        return alertDialogBuilder.create();
     }
 
     public void showMyDialog()
