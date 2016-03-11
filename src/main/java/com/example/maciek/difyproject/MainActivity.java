@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -261,7 +262,7 @@ public class MainActivity extends AppCompatActivity
 
         setMyDialog(dialog);
 
-        Button genreButton = (Button) findViewById(R.id.genreButton);
+        final Button genreButton = (Button) findViewById(R.id.genreButton);
         setGenreButton(genreButton);
 
         final Button countryButton = (Button) this.findViewById(R.id.countryButton);
@@ -281,16 +282,25 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                //getGenres();
-               // prepareDialog();
-                //showDialog(getGenreButton());
-                DialogBuilder dialogBuilder = new DialogBuilder();
+                final DialogBuilder dialogBuilder = new DialogBuilder();
 
-                Dialog dialog = dialogBuilder.createDialogWithListView(MainActivity.this);
+                JSONParser jsonParser = new JSONParser();
+
+                ListViewBuilder listViewBuilder = new ListViewBuilder();
+
+                jsonParser.getGenres(MainActivity.this, listViewBuilder);
+
+                Dialog dialog = dialogBuilder.createDialogWithListView(MainActivity.this, listViewBuilder);
 
                 dialogBuilder.setDialog(dialog);
 
                 dialogBuilder.showMyDialog();
+
+                EditText filter = (EditText) dialog.findViewById(R.id.editText2);
+
+                listViewBuilder.searchFilter(filter);
+
+                listViewBuilder.getClickedListViewItem(listViewBuilder, dialog, genreButton);
             }
         });
 
@@ -311,9 +321,7 @@ public class MainActivity extends AppCompatActivity
 
                 dialogBuilder.showMyDialog();
 
-                String title = countryButton.getText().toString();
 
-                setCountry(title);
             }
         });
 
@@ -334,9 +342,9 @@ public class MainActivity extends AppCompatActivity
 
                 dialogBuilder.showMyDialog();
 
-                String title = cityButton.getText().toString();
+                //String title = cityButton.getText().toString();
 
-                setCity(title);
+                //setCity(title);
             }
         });
 
@@ -348,165 +356,40 @@ public class MainActivity extends AppCompatActivity
                 Intent intent = new Intent(activity, SearchedArtists.class);
                 intent.setClass(MainActivity.this, SearchedArtists.class);
                 intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra("COUNTRY", getCountry());
-                intent.putExtra("CITY", getCity());
-                intent.putExtra("GENRE", getGenre());
+
+                String name = getTextFromSearchEditText();
+
+                if(!name.equals(""))
+                {
+                    intent.putExtra("NAME", name);
+                }
+
+                putExtrasToIntent(intent, genreButton, "GENRE");
+                putExtrasToIntent(intent, countryButton, "COUNTRY");
+                putExtrasToIntent(intent, cityButton, "CITY");
+
                 intent.setType("text/plain");
                 startActivity(intent);
             }
         });
     }
 
-    /*public void setButtonsTitle(View v)
+    public void putExtrasToIntent(Intent intent, Button button, String key)
     {
-        String title = getButtonTitle();
+        String title = button.getText().toString();
 
-        switch (v.getId())
+        if(!title.equals("Select"))
         {
-            case R.id.countryButton:
-
-                Button countryButton = getCountryButton();
-
-                countryButton.setText(title);
-
-                break;
-
-            case R.id.cityButton:
-
-                Button cityButton = getCityButton();
-
-                cityButton.setText(title);
-
-                break;
+            intent.putExtra(key, title);
         }
-    }*/
-
-    public void prepareDialog()
-    {
-        builder = new AlertDialog.Builder(activity, R.style.AlertDialogCustom);
-
-        layoutInflater = activity.getLayoutInflater();
-
-        final View dialogView = layoutInflater.inflate(R.layout.list_view, null);
-
-        builder.setView(dialogView);
-        builder.setTitle("Genres");
-
-        modeList = (ListView) dialogView.findViewById(R.id.listView);
-
-        ColorDrawable sage = new ColorDrawable(ContextCompat.getColor(activity, R.color.colorDivider));
-        modeList.setDivider(sage);
-        modeList.setDividerHeight(1);
-
-        if(lstring == null)
-        {
-            lstring = new ArrayList<>();
-        }
-        else
-        {
-            lstring.clear();
-        }
-
-        modeAdapter = new ArrayAdapter<String>(activity, R.layout.list_view_custom, lstring);
-
-        modeList.setAdapter(modeAdapter);
-
-        dialogView.setBackgroundColor(Color.parseColor("#181818"));
-
-        dialog = builder.create();
-
-        inputSearch = (EditText) dialogView.findViewById(R.id.editText2);
-
     }
 
-    public void showDialog(final Button myButton)
+    public String getTextFromSearchEditText()
     {
+        EditText editText = (EditText) findViewById(R.id.editText);
 
-        dialog.show();
+        String text = editText.getText().toString();
 
-        inputSearch.addTextChangedListener(new TextWatcher()
-        {
-
-            @Override
-            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3)
-            {
-                // When user changed the Text
-                //Main3Activity.this.arraylist.getFilter().filter(cs);
-                activity.modeAdapter.getFilter().filter(cs);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s)
-            {
-
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-                                          int arg3)
-            {
-                // TODO Auto-generated method stub
-
-            }
-
-        });
-
-        modeList.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id)
-            {
-                TextView temp = (TextView) view;
-                // Toast.makeText(activity, temp.getText(), Toast.LENGTH_SHORT).show();
-                setGenre(temp.getText().toString());
-                myButton.setText(getGenre());
-                dialog.dismiss();
-            }
-        });
+        return text;
     }
-
-    public void getGenres(final ListViewBuilder listViewBuilder)
-    {
-        String url = "http://developer.echonest.com/api/v4/genre/list?api_key=SXZNUZ73HVWJ7T5V1&format=json";
-
-        RequestQueue rQ = Volley.newRequestQueue(this);
-
-        final JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>()
-                {
-                    @Override
-                    public void onResponse(JSONObject response)
-                    {
-                        try
-                        {
-                            JSONObject j = response.getJSONObject("response");
-                            JSONArray jsonArray = j.getJSONArray("genres");
-
-                            for (int i = 0; i < jsonArray.length(); i++)
-                            {
-                                JSONObject object = jsonArray.getJSONObject(i);
-                                String genre = object.getString("name");
-                                List<String> listString = listViewBuilder.getListString();
-                                listString.add(genre);
-                            }
-                        } catch (JSONException e)
-                        {
-
-                        }
-                    }
-                }, new Response.ErrorListener()
-                {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error)
-                    {
-                        // TODO Auto-generated method stub
-
-                    }
-                });
-
-        rQ.add(jsObjRequest);
-    }
-
-
 }

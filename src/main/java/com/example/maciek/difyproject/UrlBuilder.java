@@ -17,6 +17,7 @@ public class UrlBuilder
     private String ARTIST_LOCATION = "artist_location=";
     private String COUNTRY = "country:";
     private String CITY = "city:";
+    private String NAME = "name=";
     private String URL;
 
     private int RESULT_1 = 1;
@@ -48,6 +49,11 @@ public class UrlBuilder
     public int getResult100()
     {
         return RESULT_100;
+    }
+
+    public String getNameString()
+    {
+        return  NAME;
     }
 
     public String getUrl()
@@ -148,6 +154,23 @@ public class UrlBuilder
         LogBuilder.createDebugLog(191, this, "createArtistSearchUrl", "URL: " + url);
 
         setUrl(url);
+    }
+
+    public void addNameToUrl(String name)
+    {
+        if (getUrl() != null)
+        {
+            String url;
+            url = getUrl();
+            url = url + getAndString();
+            url = url + getNameString();
+            url = url + name;
+            url = url + "*";
+
+            LogBuilder.createDebugLog(191, this, "addNameToUrl", "URL: " + url);
+
+            setUrl(url);
+        }
     }
 
     public void addGenreToUrl(String genre)

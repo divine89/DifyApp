@@ -299,7 +299,7 @@ public class DialogBuilder
         return alertDialogBuilder.create();
     }
 
-    public Dialog createDialogWithListView(Context context)
+    public Dialog createDialogWithListView(Context context, ListViewBuilder listViewBuilder)
     {
         createAlertDialogBuilder(context);
 
@@ -316,8 +316,6 @@ public class DialogBuilder
         String title = "SELECT";
 
         configureDialog(dialogView, title);
-
-        ListViewBuilder listViewBuilder = new ListViewBuilder();
 
         int id = R.id.listView;
 

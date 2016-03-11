@@ -32,14 +32,31 @@ public class SearchedArtists extends AppCompatActivity
     private String genreFromIntent;
     private String countryFromIntent;
     private String cityFromIntent;
+    private String nameFromIntent;
     private Intent intent;
     private Bundle extrasBundle;
     private UrlBuilder urlBuilder;
     private String GENRE_KEY = "GENRE";
     private String COUNTRY_KEY = "COUNTRY";
     private String CITY_KEY = "CITY";
+    private String NAME_KEY = "NAME";
 
     //TODO odzielic rodzaje metod od siebie komentarzami. Wydzielic miejsce na konstruktor.
+
+    public String getNameKey()
+    {
+        return NAME_KEY;
+    }
+
+    public void setNameFromIntent(String nameFromIntent)
+    {
+        this.nameFromIntent = nameFromIntent;
+    }
+
+    public String getNameFromIntent()
+    {
+        return nameFromIntent;
+    }
 
     public String getGenreKey()
     {
@@ -212,11 +229,21 @@ public class SearchedArtists extends AppCompatActivity
 
         extras = getExtrasBundle();
 
+        setNameFromIntent(getExtrasFromIntent(extras, getNameKey()));
+
         setCityFromIntent(getExtrasFromIntent(extras, getCityKey()));
 
         setGenreFromIntent(getExtrasFromIntent(extras, getGenreKey()));
 
         setCountryFromIntent(getExtrasFromIntent(extras, getCountryKey()));
+
+        String nameFromIntent = getNameFromIntent();
+
+        if(checkWhiteSpaces(nameFromIntent))
+        {
+            String nameWithoutSpace = replaceWhiteSpaceFromString(nameFromIntent);
+            setGenreFromIntent(nameWithoutSpace);
+        }
 
         String genreFromIntent = getGenreFromIntent();
 
@@ -243,6 +270,12 @@ public class SearchedArtists extends AppCompatActivity
         }
 
         getUrlBuilder().createSearchAnArtistUrl();
+
+        if (getNameFromIntent() != null)
+        {
+            getUrlBuilder().addNameToUrl(getNameFromIntent());
+            setNameFromIntent(null);
+        }
 
         if (getGenreFromIntent() != null)
         {
@@ -313,6 +346,8 @@ public class SearchedArtists extends AppCompatActivity
                 });
 
         rQ.add(jsObjRequest);
+
+        listView.invalidateViews();
 
     }
 
