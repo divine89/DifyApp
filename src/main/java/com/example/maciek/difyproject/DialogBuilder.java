@@ -288,7 +288,7 @@ public class DialogBuilder
 
         View dialogView = getDialogView();
 
-        String title = "SELECT";
+        String title = "Select";
 
         configureDialog(dialogView, title);
 

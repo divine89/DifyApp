@@ -165,7 +165,6 @@ public class UrlBuilder
             url = url + getAndString();
             url = url + getNameString();
             url = url + name;
-            url = url + "*";
 
             LogBuilder.createDebugLog(191, this, "addNameToUrl", "URL: " + url);
 

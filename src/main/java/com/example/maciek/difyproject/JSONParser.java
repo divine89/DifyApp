@@ -1,6 +1,7 @@
 package com.example.maciek.difyproject;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -83,6 +84,65 @@ public class JSONParser
                                 String genre = object.getString(nameString);
 
                                 List<String> listString = listViewBuilder.getListString();
+
+                                listString.add(genre);
+                            }
+                        }
+                        catch (JSONException e)
+                        {
+
+                        }
+                    }
+                }, new Response.ErrorListener()
+                {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+
+        setJsonObjectRequest(jsObjRequest);
+
+        requestQueue.add(jsObjRequest);
+    }
+
+    public void getResults(Context context, final ListViewBuilder listViewBuilder, String url)
+    {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        setRequestQueue(requestQueue);
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        try
+                        {
+                            String responseString = "response";
+
+                            JSONObject j = response.getJSONObject(responseString);
+
+                            String artistsString = "artists";
+
+                            JSONArray jsonArray = j.getJSONArray(artistsString);
+
+                            for (int i = 0; i < jsonArray.length(); i++)
+                            {
+                                JSONObject object = jsonArray.getJSONObject(i);
+
+                                String nameString = "name";
+
+                                String genre = object.getString(nameString);
+
+                                List<String> listString = listViewBuilder.getListString();
+
+                                Log.d("DEBUG", "Names:" + genre);
 
                                 listString.add(genre);
                             }

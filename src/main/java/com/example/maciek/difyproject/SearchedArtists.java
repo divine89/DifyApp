@@ -239,7 +239,7 @@ public class SearchedArtists extends AppCompatActivity
 
         String nameFromIntent = getNameFromIntent();
 
-        if(checkWhiteSpaces(nameFromIntent))
+        if (checkWhiteSpaces(nameFromIntent))
         {
             String nameWithoutSpace = replaceWhiteSpaceFromString(nameFromIntent);
             setGenreFromIntent(nameWithoutSpace);
@@ -247,7 +247,7 @@ public class SearchedArtists extends AppCompatActivity
 
         String genreFromIntent = getGenreFromIntent();
 
-        if(checkWhiteSpaces(genreFromIntent))
+        if (checkWhiteSpaces(genreFromIntent))
         {
             String genreWithoutSpace = replaceWhiteSpaceFromString(genreFromIntent);
             setGenreFromIntent(genreWithoutSpace);
@@ -255,7 +255,7 @@ public class SearchedArtists extends AppCompatActivity
 
         String countryFromIntent = getCountryFromIntent();
 
-        if(checkWhiteSpaces(countryFromIntent))
+        if (checkWhiteSpaces(countryFromIntent))
         {
             String countryWithoutSpace = replaceWhiteSpaceFromString(countryFromIntent);
             setCountryFromIntent(countryWithoutSpace);
@@ -263,7 +263,7 @@ public class SearchedArtists extends AppCompatActivity
 
         String cityFromIntent = getCityFromIntent();
 
-        if(checkWhiteSpaces(cityFromIntent))
+        if (checkWhiteSpaces(cityFromIntent))
         {
             String cityWithoutSpace = replaceWhiteSpaceFromString(cityFromIntent);
             setGenreFromIntent(cityWithoutSpace);
@@ -295,61 +295,23 @@ public class SearchedArtists extends AppCompatActivity
             setCityFromIntent(null);
         }
 
-        listView = (ListView) searchedArtists.findViewById(R.id.listView2);
+        ListView listView = (ListView) searchedArtists.findViewById(R.id.listView2);
 
-        if (tablica == null)
-        {
-            tablica = new ArrayList<String>();
-        } else
-        {
-            tablica.clear();
-        }
+        ListViewBuilder listViewBuilder = new ListViewBuilder();
 
-        adapter = new ArrayAdapter<String>(this, R.layout.list_view_custom, tablica);
-        listView.setAdapter(adapter);
+        listViewBuilder.configureListStrings();
 
-        RequestQueue rQ = Volley.newRequestQueue(searchedArtists);
+        List<String> stringList = listViewBuilder.getListString();
 
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                (Request.Method.GET, urlBuilder.getUrl(), null, new Response.Listener<JSONObject>()
-                {
-                    @Override
-                    public void onResponse(JSONObject response)
-                    {
-                        try
-                        {
-                            //Log.d("DEBUG", "JsonObjectRequest in try");
-                            JSONObject j = response.getJSONObject("response");
-                            JSONArray jsonArray = j.getJSONArray("artists");
+        listViewBuilder.configureArrayAdapter(listView, SearchedArtists.this, stringList);
 
-                            for (int i = 0; i < jsonArray.length(); i++)
-                            {
-                                JSONObject object = jsonArray.getJSONObject(i);
-                                String artist = object.getString("name");
-                                //Log.d("DEBUG", "artist"+artist);
-                                tablica.add(artist);
-                            }
-                        } catch (JSONException e)
-                        {
+        Log.d("DEBUG", "stringList:" + stringList);
 
-                        }
-                    }
-                }, new Response.ErrorListener()
-                {
+        JSONParser jsonParser = new JSONParser();
 
-                    @Override
-                    public void onErrorResponse(VolleyError error)
-                    {
-                        Log.d("DEBUG", "JSON onErrorRespone");
+        String url = getUrlBuilder().getUrl();
 
-                    }
-                });
-
-        rQ.add(jsObjRequest);
-
-        listView.invalidateViews();
-
+        jsonParser.getResults(SearchedArtists.this, listViewBuilder, url);
     }
-
 
 }
