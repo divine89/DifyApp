@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,6 +12,7 @@
     <!--TODO przenieśc nazwy do @strings-->
     <!--TODO stworzyć style do każdego komponentu-->
     <!--TODO poprawic czytelnośc i organizacje kodu w XML-->
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -91,19 +93,35 @@
         android:layout_below="@id/textView4"
         style="@style/Buttons"/>
 
-    <Button
-        android:id="@+id/searchButton"
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginTop="72dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:text="Search"
-        android:layout_below="@id/cityButton"
-        android:background="@color/mainDark"
-        style="?android:attr/borderlessButtonStyle"
-        android:textColor="@color/textColorPrimary"/>
+    <LinearLayout style="?android:buttonBarStyle"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentBottom="true"
+                  android:orientation="horizontal"
+                  android:divider="@drawable/divider"
+                  android:dividerPadding="10dip"
+                  android:showDividers="middle"
+                  >
 
+        <Button style="?android:borderlessButtonStyle"
+                android:id="@+id/clearButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/mainDark"
+                android:textColor="@color/textColorPrimary"
+                android:text="Clear" />
 
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Search"
+            android:background="@color/mainDark"
+            style="?android:borderlessButtonStyle"
+            android:textColor="@color/textColorPrimary"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

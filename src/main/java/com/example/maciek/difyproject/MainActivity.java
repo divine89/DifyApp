@@ -73,9 +73,10 @@ public class MainActivity extends AppCompatActivity
 
     // < BUTTONS > //
     private Button genreButton;
-    public Button countryButton;
-    public Button cityButton;
+    private Button countryButton;
+    private Button cityButton;
     private Button searchButton;
+    private Button clearButton;
     // </ BUTTONS > //
 
     // < EDITTEXT >
@@ -85,6 +86,8 @@ public class MainActivity extends AppCompatActivity
     {
     }
     // </ CONSTRUCTOR > //
+
+
 
     public String getGenre()
     {
@@ -271,10 +274,12 @@ public class MainActivity extends AppCompatActivity
         final Button cityButton = (Button) findViewById(R.id.cityButton);
         setCityButton(cityButton);
 
-        Button searchButton = (Button) findViewById(R.id.searchButton);
+        final Button searchButton = (Button) findViewById(R.id.searchButton);
         setSearchButton(searchButton);
 
-        EditText editText = (EditText) findViewById(R.id.editTextDialog);
+        final Button clearButton = (Button) findViewById(R.id.clearButton);
+
+        final EditText editText = (EditText) findViewById(R.id.editText);
         setMyEditText(editText);
 
         genreButton.setOnClickListener(new View.OnClickListener()
@@ -320,8 +325,6 @@ public class MainActivity extends AppCompatActivity
                 dialogBuilder.setDialog(dialog);
 
                 dialogBuilder.showMyDialog();
-
-
             }
         });
 
@@ -370,6 +373,18 @@ public class MainActivity extends AppCompatActivity
 
                 intent.setType("text/plain");
                 startActivity(intent);
+            }
+        });
+
+        clearButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                editText.setText("");
+                genreButton.setText("Select");
+                countryButton.setText("Select");
+                cityButton.setText("Select");
             }
         });
     }

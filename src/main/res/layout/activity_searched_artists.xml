@@ -6,6 +6,9 @@
         android:id="@+id/listView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@android:color/white">
+        android:layout_marginTop="36dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:divider="@drawable/listview_divider">
     </ListView>
 </RelativeLayout>
