@@ -202,8 +202,6 @@ public class SearchedArtists extends AppCompatActivity
 
         searchedArtists = SearchedArtists.this;
 
-        SearchedArtists searchedArtists2 = new SearchedArtists();
-
         //TODO zastanowić się nad konwencją. Czy robić zmienne lokalne czy używać tylko metod get();4
         //TODO dodac logi do metod
 
@@ -232,10 +230,11 @@ public class SearchedArtists extends AppCompatActivity
         if (checkWhiteSpaces(nameFromIntent))
         {
             String nameWithoutSpace = replaceWhiteSpaceFromString(nameFromIntent);
-            setGenreFromIntent(nameWithoutSpace);
+            setNameFromIntent(nameWithoutSpace);
         }
 
         String genreFromIntent = getGenreFromIntent();
+        Log.d("DEBUG", "genreFromIntent:" + genreFromIntent);
 
         if (checkWhiteSpaces(genreFromIntent))
         {
@@ -252,11 +251,12 @@ public class SearchedArtists extends AppCompatActivity
         }
 
         String cityFromIntent = getCityFromIntent();
+        Log.d("DEBUG", "cityFromIntent:" + cityFromIntent);
 
         if (checkWhiteSpaces(cityFromIntent))
         {
             String cityWithoutSpace = replaceWhiteSpaceFromString(cityFromIntent);
-            setGenreFromIntent(cityWithoutSpace);
+            setCityFromIntent(cityWithoutSpace);
         }
 
         getUrlBuilder().createSearchAnArtistUrl();
@@ -267,8 +267,10 @@ public class SearchedArtists extends AppCompatActivity
             setNameFromIntent(null);
         }
 
+        Log.d("DEBUG", "getGenreFromIntent OUT:"+getGenreFromIntent());
         if (getGenreFromIntent() != null)
         {
+            Log.d("DEBUG", "getGenreFromIntent IN");
             getUrlBuilder().addGenreToUrl(getGenreFromIntent());
             setGenreFromIntent(null);
         }
@@ -285,7 +287,7 @@ public class SearchedArtists extends AppCompatActivity
             setCityFromIntent(null);
         }
 
-        ListView listView = (ListView) searchedArtists.findViewById(R.id.listView2);
+        final ListView listView = (ListView) searchedArtists.findViewById(R.id.listView2);
 
         ListViewBuilder listViewBuilder = new ListViewBuilder();
 
@@ -302,6 +304,13 @@ public class SearchedArtists extends AppCompatActivity
         String url = getUrlBuilder().getUrl();
 
         jsonParser.getResults(SearchedArtists.this, listViewBuilder, url);
-    }
 
+        /*new Thread(new Runnable()
+        {
+            public void run()
+            {
+                while(listView.getCount() == 0) ;
+            }
+        }).start();*/
+    }
 }

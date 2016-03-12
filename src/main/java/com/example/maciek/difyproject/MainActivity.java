@@ -344,10 +344,6 @@ public class MainActivity extends AppCompatActivity
                 dialogBuilder.setDialog(dialog);
 
                 dialogBuilder.showMyDialog();
-
-                //String title = cityButton.getText().toString();
-
-                //setCity(title);
             }
         });
 
