@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -30,6 +32,8 @@ public class SearchedArtists extends AppCompatActivity
     private String COUNTRY_KEY = "COUNTRY";
     private String CITY_KEY = "CITY";
     private String NAME_KEY = "NAME";
+
+
 
     //TODO odzielic rodzaje metod od siebie komentarzami. Wydzielic miejsce na konstruktor.
 
@@ -287,6 +291,8 @@ public class SearchedArtists extends AppCompatActivity
             setCityFromIntent(null);
         }
 
+        LinearLayout linlaHeaderProgress = (LinearLayout) findViewById(R.id.linlaHeaderProgress);
+
         final ListView listView = (ListView) searchedArtists.findViewById(R.id.listView2);
 
         ListViewBuilder listViewBuilder = new ListViewBuilder();
@@ -304,6 +310,14 @@ public class SearchedArtists extends AppCompatActivity
         String url = getUrlBuilder().getUrl();
 
         jsonParser.getResults(SearchedArtists.this, listViewBuilder, url);
+
+        new LoadingTask(linlaHeaderProgress, listView, listViewBuilder.getArrayAdapter()).execute();
+
+        int temp = listView.getCount();
+        Log.d("DEBUG","Count:" + temp);
+
+
+
 
         /*new Thread(new Runnable()
         {

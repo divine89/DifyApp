@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -300,6 +301,10 @@ public class MainActivity extends AppCompatActivity
                 dialogBuilder.setDialog(dialog);
 
                 dialogBuilder.showMyDialog();
+
+                LinearLayout linlaHeaderProgress = (LinearLayout) findViewById(R.id.linlaHeaderProgress);
+
+                new LoadingTask(linlaHeaderProgress, listViewBuilder.getListView(), listViewBuilder.getArrayAdapter()).execute();
 
                 EditText filter = (EditText) dialog.findViewById(R.id.editText2);
 
